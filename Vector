@@ -1,0 +1,172 @@
+#include <iostream>
+using namespace std;
+
+class Vector {
+	int count;
+	int length;
+	int *v;
+public:
+	//Конструктор за замовчуванням
+	Vector() { count = 0; length = 1; v = new int[length]; }
+
+	//Конструктор копіювання
+	Vector(const Vector & klass) {
+		length = klass.length;
+		count = klass.count;
+		v = new int[length];
+		for (int i = 0; i < count; i++) {
+			v[i] = klass.v[i];
+		}
+	}
+
+	//Деструктор
+	~Vector() { delete[]v; };
+
+	//Оператор присвоєння
+	Vector & operator=(const Vector & klass) {
+		if (this != &klass) {
+			delete[] v;
+			length = klass.length;
+			count = klass.count;
+			v = new int[length];
+			for (int i = 0; i < count; i++) 
+				v[i] = klass.v[i];
+		}
+		else {
+			cout <<"\n"<< "self-assignment"<<"\n";
+		}
+		return *this;
+	}
+
+	//Метод який вставляє елемент в кінець масиву
+	void pushback(int val) {
+		if (count == length)
+		{
+			length = length + length * 2;
+			int* j = new int[length];
+			for (int i = 0; i<count; i++)
+				j[i] = v[i];
+			delete[]v;
+			v = j;
+		}
+		v[count++] = val;
+	}
+
+	//Метод який вставляє елемент по індексу в масив
+	void insertAt(int index, int val) {
+		index--;
+		int flag = 0;
+		for (int i = 0; i < count; i++) {
+			if (index == i)
+			{
+				v[i] = val;
+				flag = 1;
+			}
+		}
+					if(flag == 0)
+						cout << "Index not found\n";
+}
+
+	//Метод видаляє елемент з масиву за вказаним індексом
+	void deleteAt(int index) {
+		index--;
+		int flag = 0;
+		int count1 = count;
+		int *v1 = new int[length];
+		int g=0;
+		for (int i = 0; i < count; i++,g++) {
+			if (i == index) {
+				flag = 1;
+				count1 = count - 1;
+				v1[i] = v[++g];
+			}
+			else
+				v1[i] = v[g];
+		}
+		count = count1;
+		delete[]v;
+		v = v1;
+		if (flag == 0)
+			cout << "There is no index with this number\n";
+}
+
+	//Метод видаляє всі елементи з масиву
+	void deleteAll() {
+		delete[]v;
+		count = 0; 
+		length = 1; 
+		v = new int[length];
+	}
+
+	//Метод знаходить індекс за вказаним значенням
+	void findIndex(int val) {
+		int flag = 0;
+		cout << "Value ("<<val<<") is located at index : ";
+		for (int i = 0; i < count; i++) {
+			if (v[i] == val) {
+				cout << i + 1 << " ";
+				flag = 1;
+			}
+		}
+		if (flag == 0)
+			cout << "No coincidence";
+		cout << "\n";
+	}
+
+	//Метод для виводу масиву на екран
+	void show() {
+		if (count == 0&&v==NULL)
+			cout << "Vector is empty\n";
+		for (int i = 0; i<count; i++)
+			cout<<v[i]<<" ";
+	}
+};
+
+void main()
+{
+//Створюєм вектор з трьох елементів і виводим на екран
+	Vector vec;
+	vec.pushback(4);
+	vec.pushback(55);
+	vec.pushback(10);
+	vec.show();
+	cout << "\n";
+//Видаляєм два елемента по заданих індексах і виводим на екран
+	vec.deleteAt(1);
+	vec.deleteAt(4);
+	vec.show();
+	cout << "\n";
+//Знову додаєм два елемента в кінець вектора і виводим на екран
+	vec.pushback(4);
+	vec.pushback(55);
+	vec.show();
+	cout << "\n";
+//Вставляєм елемент за заданим індексом і виводим на екран
+	vec.insertAt(4, 700);
+	vec.show();
+	cout << "\n";
+//Видаляєм всі елементи з вектора і виводим на екран
+	vec.deleteAll();
+	vec.show();
+//Знову додаєм елементи в вектор і виводим на екран
+	vec.pushback(4);
+	vec.pushback(55);
+	vec.pushback(74);
+	vec.pushback(666);
+	vec.pushback(1);
+	vec.show();
+	cout << "\n";
+//Створюєм новий вектор і ініціалізуєм його попереднім вектором
+	Vector vec1(vec);
+	vec1.show();
+	cout << "\n";
+//В новий вектор додаєм два елементи і виводим на екран
+	vec1.pushback(4);
+	vec1.pushback(777);
+	vec1.show();
+	cout << "\n";
+//Першому вектору присвоюєм новий вектор
+	vec = vec1;
+	vec.show();
+	cout << "\n";
+}
